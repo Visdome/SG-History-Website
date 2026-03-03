@@ -1,0 +1,66 @@
+{
+  "era": "2020 – 2026",
+  "title": "Ultra-Low Latency",
+  "subtitle": "5G, 10Gbps fibre, and the rise of mobile gaming",
+  "overview": "The 2020s brought ultra-low latency and ubiquitous high-speed connectivity to Singapore. Nationwide 5G rollout meant fast internet everywhere, not just at home. 10Gbps residential fibre plans became available for enthusiasts. Mobile gaming exploded as smartphones became powerful enough to run console-quality games, and 5G latency dropped low enough to make cloud gaming viable. By 2026, Singapore had effectively 'solved' the bandwidth problem — internet speeds were no longer a constraint on what people could do online.",
+  "keyStats": [
+    {
+      "value": "1-2 Gbps",
+      "label": "Typical home speed (2020)"
+    },
+    {
+      "value": "10 Gbps",
+      "label": "Available home speed (2023+)"
+    },
+    {
+      "value": "<5ms",
+      "label": "Average ping"
+    },
+    {
+      "value": "100%",
+      "label": "5G coverage target (2025)"
+    }
+  ],
+  "timeline": [
+    {
+      "year": "2020",
+      "event": "5G Launch",
+      "description": "Singtel and StarHub launched 5G networks. Mobile speeds reached 200+ Mbps with latency under 20ms."
+    },
+    {
+      "year": "2021",
+      "event": "Work-From-Home Boom",
+      "description": "COVID-19 pandemic demonstrated Singapore's internet resilience. Home fibre handled massive increase in video calls and VPN traffic."
+    },
+    {
+      "year": "2022",
+      "event": "5G Reaches 50% Coverage",
+      "description": "5G became widely available across Singapore. Mobile gaming and streaming saw major adoption surge."
+    },
+    {
+      "year": "2023",
+      "event": "10Gbps Goes Mainstream",
+      "description": "Multiple ISPs offered 10Gbps plans. Cloud gaming services like GeForce Now and Xbox Cloud Gaming became viable."
+    },
+    {
+      "year": "2025",
+      "event": "Near-Universal 5G",
+      "description": "Singapore achieved near-complete 5G coverage. Mobile became a first-class gaming platform alongside PC and console."
+    }
+  ],
+  "gamingTitle": "Gaming in the 2020s",
+  "gamingDescription": "Gaming in the 2020s became truly device-agnostic. Ultra-low latency meant cloud gaming worked seamlessly. Mobile games like Genshin Impact and PUBG Mobile had console-quality graphics and competitive esports scenes. 5G enabled gaming anywhere, not just at home.",
+  "gamingHighlights": [
+    "Cloud gaming became viable with sub-10ms latency",
+    "Popular games: Valorant, Genshin Impact, Apex Legends, Mobile Legends",
+    "Mobile esports tournaments with prize pools in millions",
+    "VR gaming became mainstream with low-latency requirements met",
+    "Cross-platform play between PC, console, and mobile standardized"
+  ],
+  "challenges": [
+    "Cost of 10Gbps plans still high for average consumers",
+    "Home networking equipment bottlenecks (routers, WiFi 6)",
+    "ISP support struggles to keep up with technical complexity",
+    "Diminishing returns - most users can't utilize full speeds"
+  ]
+}

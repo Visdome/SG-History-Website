@@ -1,0 +1,65 @@
+{
+  "era": "2000 – 2009",
+  "title": "Shared and Slow",
+  "subtitle": "The dial-up era and the birth of broadband in Singapore",
+  "overview": "The 2000s were defined by slow, shared internet connections. Most households started the decade with dial-up modems that tied up phone lines and delivered speeds of just 56 Kbps. By the end of the decade, ADSL broadband had become common, but speeds were still measured in single-digit megabits. For gamers, this meant high ping, frequent disconnections, and a reliance on cybercafés for any serious online play.",
+  "keyStats": [
+    {
+      "value": "56 Kbps",
+      "label": "Typical home speed (2000)"
+    },
+    {
+      "value": "8 Mbps",
+      "label": "Typical home speed (2009)"
+    },
+    {
+      "value": "150-300ms",
+      "label": "Average ping"
+    },
+    {
+      "value": "Singtel, StarHub",
+      "label": "Main ISPs"
+    }
+  ],
+  "timeline": [
+    {
+      "year": "2000",
+      "event": "Dial-up Dominance",
+      "description": "Most Singaporean households used 56k dial-up modems. Internet was slow, expensive per minute, and shared the phone line."
+    },
+    {
+      "year": "2002",
+      "event": "ADSL Arrives",
+      "description": "Singtel launched ADSL broadband services offering 'always-on' internet at speeds up to 512 Kbps."
+    },
+    {
+      "year": "2003",
+      "event": "Cable Broadband Competition",
+      "description": "StarHub entered the market with cable internet, competing with Singtel and pushing speeds to 1-2 Mbps."
+    },
+    {
+      "year": "2006",
+      "event": "Broadband Becomes Standard",
+      "description": "The majority of households switched from dial-up to ADSL. Speeds reached 3-6 Mbps."
+    },
+    {
+      "year": "2008",
+      "event": "Government Fibre Mandate",
+      "description": "IDA announced the Next Generation National Broadband Network (NGNBN), setting the stage for fibre."
+    }
+  ],
+  "gamingTitle": "Gaming in the 2000s",
+  "gamingDescription": "Online gaming in the 2000s was challenging due to slow speeds and high latency. Most serious gamers frequented cybercafés, which had faster connections and lower ping to game servers.",
+  "gamingHighlights": [
+    "Cybercafés were the primary place for competitive gaming",
+    "Popular games: Counter-Strike 1.6, StarCraft: Brood War, MapleStory",
+    "LAN parties were common since home internet was unreliable",
+    "High ping (200-300ms) made fast-paced games difficult to play"
+  ],
+  "challenges": [
+    "Shared phone lines meant someone picking up the phone would disconnect the internet",
+    "Download speeds were painfully slow - a 5MB file could take 10+ minutes",
+    "Monthly data caps were common and expensive to exceed",
+    "Latency made online gaming frustrating, especially for competitive play"
+  ]
+}

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Singapore's internet in the 2000s: dial-up modems, early broadband, and the rise of online gaming cafes.">
+  <title>2000s: Shared and Slow | Lag to Lightning</title>
+  <!-- Preconnect speeds up font loading and reduces layout shift -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <!-- jsDelivr CDN — same library, no third-party cookies (fixes Lighthouse best practices warning) -->
+  <script src="https://cdn.jsdelivr.net/npm/mustache@3.2.1/mustache.min.js"></script>
+</head>
+<body>
+
+
+  <nav aria-label="Main navigation">
+    <div class="logo">Lag to Lightning</div>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="2000s.html" class="active">2000s</a></li>
+      <li><a href="2010s.html">2010s</a></li>
+      <li><a href="2020s.html">2020s</a></li>
+    </ul>
+  </nav>
+
+  <main id="main-content">
+  <div id="page-content" aria-live="polite"></div>
+  </main>
+
+  <footer>
+    <p>From Lag to Lightning — Singapore Internet History (2000–2026)</p>
+    <p class="footer-sources">Sources: IMDA, IDA Annual Reports, Ookla Speedtest Global Index</p>
+  </footer>
+
+  <div class="modal-overlay" id="modal-overlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Timeline Event Details">
+      <button class="modal-close" id="modal-close" aria-label="Close modal" tabindex="-1">✕</button>
+      <div class="modal-img-area">
+        <img id="modal-img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+          alt="Modal image placeholder" style="display: none;">
+        <div class="no-image-text" id="modal-no-img">
+          📷 Your image goes here<br>
+          <span id="modal-img-hint"></span>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="modal-year"  id="modal-year"></div>
+        <div class="modal-event" id="modal-event"></div>
+        <div class="modal-desc"  id="modal-desc"></div>
+        <div class="modal-nav">
+          <button id="modal-prev" aria-label="Previous event" tabindex="-1">← Prev</button>
+          <button id="modal-next" aria-label="Next event" tabindex="-1">Next →</button>
+        </div>
+        <div class="modal-counter" id="modal-counter"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mustache template — {{placeholders}} get replaced with data from the JSON file -->
+  <script id="tmpl" type="text/x-tmpl-mustache">
+    <div class="page-header">
+      <div class="era-label">{{era}}</div>
+      <h1>{{title}}</h1>
+      <p>{{subtitle}}</p>
+    </div>
+    <hr>
+    <section>
+      <h2>Overview</h2>
+      <p>{{overview}}</p>
+    </section>
+    <hr>
+    <section>
+      <h2>Key Statistics</h2>
+      <div class="stats-grid">
+        {{#keyStats}}
+        <div class="stat-card">
+          <div class="value">{{value}}</div>
+          <div class="label">{{label}}</div>
+        </div>
+        {{/keyStats}}
+      </div>
+    </section>
+    <hr>
+    <div id="timeline-section">
+      <h2>What Happened</h2>
+      <p class="drag-hint"><span>←→</span> Drag to move timeline, click any card to read more <span>←→</span></p>
+      <div class="timeline-outer">
+        <div class="timeline-wrapper" id="timeline-wrapper" aria-label="Scrollable timeline of events" tabindex="0">
+          <div class="timeline-track">
+            <div class="tl-line"></div>
+            {{#timeline}}
+            <div class="tl-item" data-year="{{year}}" data-event="{{event}}" data-desc="{{description}}">
+              <div class="tl-dot"></div>
+              <div class="tl-stem"></div>
+              <div class="tl-card">
+                <div class="tl-year">{{year}}</div>
+                <div class="tl-event">{{event}}</div>
+                <div class="tl-hint">click to expand</div>
+              </div>
+            </div>
+            {{/timeline}}
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <section>
+      <h2>Gaming Experience</h2>
+      <div class="gaming-box">
+        <h3>{{gamingTitle}}</h3>
+        <p>{{gamingDescription}}</p>
+        <ul>
+          {{#gamingHighlights}}
+          <li>{{.}}</li>
+          {{/gamingHighlights}}
+        </ul>
+      </div>
+    </section>
+    <hr>
+    <section>
+      <h2>Challenges</h2>
+      <ul class="challenges-list">
+        {{#challenges}}
+        <li>{{.}}</li>
+        {{/challenges}}
+      </ul>
+    </section>
+  </script>
+
+  <script>
+    // Which data file to load (script.js reads this variable)
+    var DATA_FILE = 'data/2000s-data.json';
+
+    // Add your image paths here once you have them
+    // e.g.  '2000': 'images/dialup-modem.jpg'
+    var IMAGES = {
+      '2000': 'images/modem.jpg',
+      '2002': 'images/adsl.png',
+      '2003': 'images/starhub.jpg',
+      '2006': 'images/dialup.gif',
+      '2008': 'images/ngnbn.png'
+    };
+  </script>
+  <script src="script.js"></script>
+
+</body>
+</html>
