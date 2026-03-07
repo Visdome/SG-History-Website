@@ -61,20 +61,6 @@ The homepage uses the **Wayback Machine Availability API** (Internet Archive):
 - Fetches the closest archived snapshot of Singapore ISP homepages from the dial-up era
 - Docs: https://archive.org/help/wayback_api.php
 
----
-
-## Assignment Requirements Met
-
-✅ Website about internet history in Singapore during my lifetime (2000–2026)
-✅ At least 3 pages (4 total: homepage + 3 era pages)
-✅ Content rendered from JSON using a template engine (Mustache.js)
-✅ JSON data validation before rendering
-✅ Responsive design for desktop and mobile
-✅ Public API integration (Wayback Machine) — extension requirement
-✅ HTML validation and accessibility tests passed
-
----
-
 ## Data Sources
 
 - IMDA (Infocomm Media Development Authority)
