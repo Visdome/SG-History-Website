@@ -1,77 +1,86 @@
-// script.js — shared by all three era pages (2000s, 2010s, 2020s)
-// Each page sets DATA_FILE and IMAGES before loading this script
+// script.js - used by all three era pages
+// each page sets DATA_FILE and IMAGES before loading this script
 
-// These are used by the modal to know which card is open
-var timelineItems = [];
-var currentIndex = 0;
+// keep track of which timeline item the modal is showing
+let timelineItems = [];
+let currentIndex = 0;
 
-// --- STEP 1: Load the JSON data and render the page ---
-
+// load the json file and render the page
 fetch(DATA_FILE)
   .then(function(response) {
     return response.json();
   })
   .then(function(data) {
 
-    // Basic check that the JSON has the fields we need
-    if (!data.title || !data.era || !Array.isArray(data.timeline) || data.timeline.length === 0) {
-      document.getElementById('page-content').innerHTML = '<p style="color:red; padding:40px;">Error: JSON data is missing required fields.</p>';
+    // check the json has everything we need before trying to render
+    let errors = [];
+
+    if (!data.title || !data.era) errors.push('missing title or era');
+    if (!Array.isArray(data.timeline) || data.timeline.length === 0) errors.push('timeline is missing or empty');
+    if (!Array.isArray(data.keyStats) || data.keyStats.length === 0) errors.push('keyStats is missing or empty');
+    if (!Array.isArray(data.gamingHighlights) || data.gamingHighlights.length === 0) errors.push('gamingHighlights is missing or empty');
+    if (!Array.isArray(data.challenges) || data.challenges.length === 0) errors.push('challenges is missing or empty');
+
+    if (errors.length > 0) {
+      document.getElementById('page-content').innerHTML = '<p style="color:red; padding:40px;">Error: ' + errors.join(', ') + '</p>';
       return;
     }
 
-    // Warn in the console if any timeline item is missing a year or event
-    for (var i = 0; i < data.timeline.length; i++) {
+    // warn in the console if any timeline item is missing fields
+    for (let i = 0; i < data.timeline.length; i++) {
       if (!data.timeline[i].year || !data.timeline[i].event) {
-        console.warn('Timeline item ' + i + ' is missing year or event');
+        console.warn('timeline item ' + i + ' is missing year or event');
       }
     }
 
-    // Save the timeline array so the modal can use it later
+    // also check keyStats items have value and label
+    for (let i = 0; i < data.keyStats.length; i++) {
+      if (!data.keyStats[i].value || !data.keyStats[i].label) {
+        console.warn('keyStats item ' + i + ' is missing value or label');
+      }
+    }
+
     timelineItems = data.timeline;
 
-    // Use Mustache to fill in the HTML template with our data
-    var rendered = Mustache.render(document.getElementById('tmpl').innerHTML, data);
+    // render the mustache template with the data
+    let rendered = Mustache.render(document.getElementById('tmpl').innerHTML, data);
     document.getElementById('page-content').innerHTML = rendered;
 
-    // Now that the cards are in the DOM, set up the timeline
     setupTimeline();
   })
   .catch(function(error) {
-    console.error('Could not load data:', error);
+    console.error('could not load data:', error);
   });
 
 
-// --- STEP 2: Set up the draggable infinite-loop timeline ---
-
+// sets up the draggable timeline after the cards are in the DOM
 function setupTimeline() {
-  var wrapper = document.getElementById('timeline-wrapper');
-  var track = wrapper.querySelector('.timeline-track');
+  let wrapper = document.getElementById('timeline-wrapper');
+  let track = wrapper.querySelector('.timeline-track');
 
-  // Get all the original cards before we start cloning
-  var cards = track.querySelectorAll('.tl-item');
-  var cardCount = cards.length;
+  let cards = track.querySelectorAll('.tl-item');
+  let cardCount = cards.length;
 
-  // Clone all cards and add copies before and after the originals.
-  // This creates the illusion of an infinite loop when scrolling.
-  for (var i = 0; i < cardCount; i++) {
-    var cloneBefore = cards[i].cloneNode(true);
-    var cloneAfter  = cards[i].cloneNode(true);
+  // clone all cards before and after so it loops infinitely
+  for (let i = 0; i < cardCount; i++) {
+    let cloneBefore = cards[i].cloneNode(true);
+    let cloneAfter = cards[i].cloneNode(true);
     cloneBefore.setAttribute('data-clone', 'true');
     cloneAfter.setAttribute('data-clone', 'true');
     track.insertBefore(cloneBefore, track.firstChild);
     track.appendChild(cloneAfter);
   }
 
-  var cardWidth = cards[0].offsetWidth;
+  let cardWidth = cards[0].offsetWidth;
 
-  // Scroll so the first real card is visible in the centre on load
+  // start scrolled to the first real card
   wrapper.scrollLeft = (cardCount * cardWidth) - (wrapper.clientWidth / 2) + (cardWidth / 2);
 
-  // --- Drag to scroll (mouse) ---
-  var isDragging = false;
-  var dragStartX = 0;
-  var dragStartScrollLeft = 0;
-  var didDrag = false;
+  // mouse drag
+  let isDragging = false;
+  let dragStartX = 0;
+  let dragStartScrollLeft = 0;
+  let didDrag = false;
 
   wrapper.addEventListener('mousedown', function(e) {
     isDragging = true;
@@ -88,14 +97,14 @@ function setupTimeline() {
 
   window.addEventListener('mousemove', function(e) {
     if (!isDragging) return;
-    var distance = e.clientX - dragStartX;
+    let distance = e.clientX - dragStartX;
     if (Math.abs(distance) > 5) didDrag = true;
     wrapper.scrollLeft = dragStartScrollLeft - distance;
   });
 
-  // --- Drag to scroll (touch) ---
-  var touchStartX = 0;
-  var touchStartScrollLeft = 0;
+  // touch drag
+  let touchStartX = 0;
+  let touchStartScrollLeft = 0;
 
   wrapper.addEventListener('touchstart', function(e) {
     touchStartX = e.touches[0].clientX;
@@ -103,75 +112,69 @@ function setupTimeline() {
   });
 
   wrapper.addEventListener('touchmove', function(e) {
-    var distance = e.touches[0].clientX - touchStartX;
+    let distance = e.touches[0].clientX - touchStartX;
     wrapper.scrollLeft = touchStartScrollLeft - distance;
   });
 
-  // --- Infinite loop + highlight centre card on scroll ---
+  // infinite loop scroll + highlight the centre card
   wrapper.addEventListener('scroll', function() {
-    var allCards = track.querySelectorAll('.tl-item');
-    var totalWidth = cardCount * cardWidth;
-    var centre = wrapper.scrollLeft + wrapper.clientWidth / 2;
+    let allCards = track.querySelectorAll('.tl-item');
+    let totalWidth = cardCount * cardWidth;
+    let centre = wrapper.scrollLeft + wrapper.clientWidth / 2;
 
-    // If we've scrolled too far right, jump back by one full set of cards
+    // jump scroll position to create the loop effect
     if (wrapper.scrollLeft >= totalWidth * 2) {
       wrapper.scrollLeft -= totalWidth;
       return;
     }
-    // If we've scrolled too far left, jump forward by one full set
     if (wrapper.scrollLeft < totalWidth * 0.5) {
       wrapper.scrollLeft += totalWidth;
       return;
     }
 
-    // Dim all cards, then highlight the one closest to the centre
-    var closestIndex = 0;
-    var closestDistance = Infinity;
-    for (var i = 0; i < allCards.length; i++) {
-      var cardCentre = allCards[i].offsetLeft + cardWidth / 2;
-      var distance = Math.abs(cardCentre - centre);
+    // find which card is closest to the centre and highlight it
+    let closestIndex = 0;
+    let closestDistance = Infinity;
+    for (let i = 0; i < allCards.length; i++) {
+      let cardCentre = allCards[i].offsetLeft + cardWidth / 2;
+      let distance = Math.abs(cardCentre - centre);
       if (distance < closestDistance) {
         closestDistance = distance;
         closestIndex = i;
       }
     }
-    for (var i = 0; i < allCards.length; i++) {
-      allCards[i].style.opacity = (i === closestIndex) ? '1' : '0.4';
+    for (let i = 0; i < allCards.length; i++) {
+      allCards[i].style.opacity = (i === closestIndex) ? '1' : '0.6';
     }
   });
 
-  // Fire scroll once so the first card highlights on load
+  // trigger scroll once on load so the first card is highlighted
   setTimeout(function() {
     wrapper.dispatchEvent(new Event('scroll'));
   }, 50);
 
-  // --- Click a card to open the modal ---
-  // Only attach listeners to real cards, not clones
-  var realCards = track.querySelectorAll('.tl-item:not([data-clone])');
-  for (var i = 0; i < realCards.length; i++) {
-    // Make cards keyboard-accessible: they're divs acting as buttons
+  // add click listeners to real cards only (not clones)
+  let realCards = track.querySelectorAll('.tl-item:not([data-clone])');
+  for (let i = 0; i < realCards.length; i++) {
     realCards[i].setAttribute('role', 'button');
     realCards[i].setAttribute('tabindex', '0');
     realCards[i].setAttribute('aria-label', timelineItems[i].year + ': ' + timelineItems[i].event);
-    // We use a closure to capture the index at the time of the loop
     realCards[i].addEventListener('click', makeClickHandler(i));
     realCards[i].addEventListener('keydown', makeKeyHandler(i));
   }
 
-  // A simple function that returns a click handler for a given card index.
-  // This is needed because if we wrote the listener inline inside the loop,
-  // all cards would share the same 'i' variable and open the last card.
+  // need a separate function here so each card captures its own index
+  // if we did this inline all cards would end up with the last value of i
   function makeClickHandler(index) {
     return function() {
       if (didDrag) {
-        didDrag = false; // ignore click if the user was just dragging
+        didDrag = false;
         return;
       }
       openModal(index);
     };
   }
-
-  // Keyboard handler: Enter or Space activates the card, matching button behaviour
+  // also add keyboard accessibility for Enter and Space keys to open the modal
   function makeKeyHandler(index) {
     return function(e) {
       if (e.key === 'Enter' || e.key === ' ') {
@@ -181,10 +184,9 @@ function setupTimeline() {
     };
   }
 
-  // --- Modal controls ---
+  // modal open/close/nav buttons
   document.getElementById('modal-close').addEventListener('click', closeModal);
 
-  // Close if the user clicks the dark backdrop behind the modal
   document.getElementById('modal-overlay').addEventListener('click', function(e) {
     if (e.target === this) closeModal();
   });
@@ -197,86 +199,76 @@ function setupTimeline() {
     openModal(currentIndex + 1);
   });
 
-  // Keyboard shortcuts: Escape to close, arrow keys to navigate
+  // keyboard shortcuts for the modal
   document.addEventListener('keydown', function(e) {
-    var overlay = document.getElementById('modal-overlay');
+    let overlay = document.getElementById('modal-overlay');
     if (!overlay.classList.contains('visible')) return;
-    if (e.key === 'Escape')      closeModal();
-    if (e.key === 'ArrowLeft')   openModal(currentIndex - 1);
-    if (e.key === 'ArrowRight')  openModal(currentIndex + 1);
+    if (e.key === 'Escape')     closeModal();
+    if (e.key === 'ArrowLeft')  openModal(currentIndex - 1);
+    if (e.key === 'ArrowRight') openModal(currentIndex + 1);
   });
 }
 
 
-// --- STEP 3: Open the modal for a given card index ---
-
+// opens the modal and fills it with the data for the clicked card
 function openModal(index) {
-  // Don't go past the first or last card
   if (index < 0 || index >= timelineItems.length) return;
 
   currentIndex = index;
-  var item = timelineItems[index];
+  let item = timelineItems[index];
 
-  // Fill in the modal text
   document.getElementById('modal-year').textContent    = item.year;
   document.getElementById('modal-event').textContent   = item.event;
   document.getElementById('modal-desc').textContent    = item.description;
   document.getElementById('modal-counter').textContent = (index + 1) + ' / ' + timelineItems.length;
 
-  // Disable prev/next buttons at the ends
   document.getElementById('modal-prev').disabled = (index === 0);
   document.getElementById('modal-next').disabled = (index === timelineItems.length - 1);
 
-  // Show the image if one exists for this year, otherwise show the placeholder
-  var imgEl     = document.getElementById('modal-img');
-  var noImgEl   = document.getElementById('modal-no-img');
-  var imagePath = IMAGES[item.year];
+  // show image if there is one for this year, otherwise show the placeholder
+  let imgEl     = document.getElementById('modal-img');
+  let noImgEl   = document.getElementById('modal-no-img');
+  let imagePath = IMAGES[item.year];
 
   if (imagePath) {
-    imgEl.src            = imagePath;
-    imgEl.alt            = item.event;
-    imgEl.style.display  = 'block';
+    imgEl.src             = imagePath;
+    imgEl.alt             = item.event;
+    imgEl.style.display   = 'block';
     noImgEl.style.display = 'none';
   } else {
-    imgEl.style.display  = 'none';
+    imgEl.style.display   = 'none';
     noImgEl.style.display = 'block';
     document.getElementById('modal-img-hint').textContent = 'Add IMAGES["' + item.year + '"] in the HTML to show a photo here';
   }
 
-  // Highlight the active card on the timeline
-  var realCards = document.querySelectorAll('.tl-item:not([data-clone])');
-  for (var i = 0; i < realCards.length; i++) {
+  // highlight the active card
+  let realCards = document.querySelectorAll('.tl-item:not([data-clone])');
+  for (let i = 0; i < realCards.length; i++) {
     realCards[i].classList.remove('active');
   }
   realCards[index].classList.add('active');
 
-  // Show the modal and make its buttons focusable
-  var overlay = document.getElementById('modal-overlay');
+  let overlay = document.getElementById('modal-overlay');
   overlay.classList.add('visible');
   overlay.removeAttribute('aria-hidden');
-  // Re-enable tab focus on all modal buttons now that the modal is open
   document.getElementById('modal-close').removeAttribute('tabindex');
   document.getElementById('modal-prev').removeAttribute('tabindex');
   document.getElementById('modal-next').removeAttribute('tabindex');
-  // Move focus into the modal so screen readers announce the content
   document.getElementById('modal-close').focus();
 }
 
 
-// --- STEP 4: Close the modal ---
-
+// closes the modal and resets everything
 function closeModal() {
-  var overlay = document.getElementById('modal-overlay');
+  let overlay = document.getElementById('modal-overlay');
   overlay.classList.remove('visible');
   overlay.setAttribute('aria-hidden', 'true');
-  // Make modal buttons unfocusable again while the modal is hidden
   document.getElementById('modal-close').setAttribute('tabindex', '-1');
   document.getElementById('modal-prev').setAttribute('tabindex', '-1');
   document.getElementById('modal-next').setAttribute('tabindex', '-1');
 
-  // Remove the active highlight from all cards
-  var allCards = document.querySelectorAll('.tl-item');
-  for (var i = 0; i < allCards.length; i++) {
+  let allCards = document.querySelectorAll('.tl-item');
+  for (let i = 0; i < allCards.length; i++) {
     allCards[i].classList.remove('active');
   }
 }
